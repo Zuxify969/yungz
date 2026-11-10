@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Yungz — Portofolio</title>
 <meta name="description" content="Portofolio Yungz — developer & kreator digital.">
+<link rel="icon" href="profil.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -113,6 +114,24 @@
   .toast.show{transform:translate(-50%,0)}
   .box{max-height:88vh;overflow:auto}
 
+  /* 1 tab = 1 halaman */
+  section.page{display:none}
+  section.page.active{display:block;animation:pageIn .55s cubic-bezier(.2,.8,.2,1)}
+  .hero.page.active{display:flex}
+  section.page:not(.hero){min-height:70svh}
+  @keyframes pageIn{from{opacity:0;transform:translateY(24px) scale(.985)}to{opacity:1;transform:none}}
+
+  /* foto profil */
+  .profile{position:relative;width:132px;height:132px;border-radius:50%;background:var(--grad);margin-bottom:22px;cursor:pointer;
+    box-shadow:0 14px 44px -14px var(--a1);transition:transform .35s cubic-bezier(.3,1.5,.5,1),box-shadow .35s;-webkit-tap-highlight-color:transparent}
+  .profile:hover{transform:scale(1.06);box-shadow:0 18px 56px -12px var(--a2)}
+  .profile>*{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);border-radius:50%;background:#12121f}
+  .profile span{display:grid;place-items:center;font-size:52px;font-weight:700}
+  .profile img{object-fit:cover}
+  .profile.spin{animation:spin .8s cubic-bezier(.3,1.4,.5,1)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media(max-width:480px){.profile{width:112px;height:112px}}
+
   /* bottom navbar (mobile & tablet) */
   .bottom-nav{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;
     justify-content:space-around;gap:2px;padding:7px;border-radius:22px;background:rgba(14,14,26,.85);
@@ -192,7 +211,8 @@
   <a href="#contact"><svg class="i"><use href="#i-mail"/></svg><span>Kontak</span></a>
 </div>
 
-<section class="hero" id="home">
+<section class="hero page" id="home">
+  <div class="profile" id="profile" title="Klik aku"><span>Y</span><img src="profil.jpeg" alt="Foto profil Yungz" onerror="this.remove()"></div>
   <div class="hi">Halo, saya</div>
   <h1 class="grad">Yungz</h1>
   <div class="role"><span id="typed"></span><span class="caret"></span></div>
@@ -202,14 +222,14 @@
   </div>
 </section>
 
-<section id="about" class="about">
+<section id="about" class="about page">
   <span class="tag reveal">Tentang</span>
   <h2 class="reveal">Sedikit <span class="grad">tentang saya</span></h2>
   <p class="reveal">Saya <b>Yungz</b>, kreator digital yang suka mengubah ide menjadi sesuatu yang <b>nyata, cepat, dan enak dilihat</b>.</p>
   <p class="reveal">Saya senang membangun website, bereksperimen dengan desain, dan terus belajar hal baru setiap hari. Ganti teks ini dengan cerita kamu sendiri.</p>
 </section>
 
-<section id="skills">
+<section id="skills" class="page">
   <span class="tag reveal">Kemampuan</span>
   <h2 class="reveal">Skill & <span class="grad">tools</span></h2>
   <div class="chips reveal">
@@ -223,7 +243,7 @@
   </div>
 </section>
 
-<section id="projects">
+<section id="projects" class="page">
   <span class="tag reveal">Karya</span>
   <h2 class="reveal">Proyek <span class="grad">pilihan</span></h2>
   <p class="sub reveal">Klik kartu untuk melihat detail.</p>
@@ -249,7 +269,7 @@
   </div>
 </section>
 
-<section id="contact">
+<section id="contact" class="page">
   <div class="contact reveal">
     <h2>Ayo <span class="grad">berkolaborasi</span></h2>
     <p>Punya ide atau proyek? Klik tombol di bawah untuk menyalin email saya.</p>
@@ -303,14 +323,23 @@
   }), { threshold: .15 });
   $$('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 80 + 'ms'; io.observe(el); });
 
-  // Navbar aktif sesuai section
+  // 1 tab navbar = 1 halaman
+  const pages = $$('section.page');
+  const pageIds = pages.map(p => p.id);
   const navLinks = $$('nav a:not(.logo), .bottom-nav a');
-  const setActive = id => navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
-  const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }), { rootMargin: '-45% 0px -50% 0px' });
-  ['home', 'about', 'skills', 'projects', 'contact'].forEach(id => { const s = document.getElementById(id); if (s) spy.observe(s); });
-  addEventListener('scroll', () => {
-    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 6) setActive('contact');
-  }, { passive: true });
+  function showPage() {
+    let id = location.hash.slice(1);
+    if (!pageIds.includes(id)) id = 'home';
+    pages.forEach(p => p.classList.toggle('active', p.id === id));
+    navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    scrollTo(0, 0);
+  }
+  addEventListener('hashchange', showPage);
+  showPage();
+
+  // Foto profil: berputar saat diklik
+  const pf = $('#profile');
+  pf.addEventListener('click', () => { pf.classList.remove('spin'); void pf.offsetWidth; pf.classList.add('spin'); });
 
   // Chips toggle
   $$('.chip').forEach(c => c.addEventListener('click', () => c.classList.toggle('on')));
