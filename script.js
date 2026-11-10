@@ -77,7 +77,7 @@
       }
       if (drag) {
         let tx = drag.tx, ty = drag.ty;
-        const dx = tx, dy = ty - AY, d = Math.hypot(dx, dy), reach = (LR + L) * .97;
+        const dx = tx, dy = ty - AY, d = Math.hypot(dx, dy), reach = (LR + L) * .92;
         if (d > reach) { tx = dx / d * reach; ty = AY + dy / d * reach; }
         B.px = B.x; B.py = B.y;
         B.x += (tx - B.x) * .55; B.y += (ty - B.y) * .55;
@@ -86,13 +86,19 @@
         const s = Math.hypot(vx, vy); if (s > 40) { vx *= 40 / s; vy *= 40 / s; }
         B.px = B.x; B.py = B.y; B.x += vx; B.y += vy + G;
       }
-      for (let k = 0; k < 14; k++) {
+      for (let k = 0; k < 24; k++) {
         for (let i = 0; i < N; i++) link(pts[i], pts[i + 1], SEG);
         link(A, B, L);
       }
       for (const p of [A, B]) {
         if (p.x < minX) { p.x = minX; p.px = p.x; } else if (p.x > maxX) { p.x = maxX; p.px = p.x; }
       }
+      // kunci panjang tali & kartu secara pasti (anti putus / melar)
+      for (let i = 1; i <= N; i++) {
+        const a = pts[i - 1], p = pts[i], dx = p.x - a.x, dy = p.y - a.y, d = Math.hypot(dx, dy) || 1e-4;
+        p.x = a.x + dx / d * SEG; p.y = a.y + dy / d * SEG;
+      }
+      { const dx = B.x - A.x, dy = B.y - A.y, d = Math.hypot(dx, dy) || 1e-4; B.x = A.x + dx / d * L; B.y = A.y + dy / d * L; }
       let e = 0; for (const p of pts) e += Math.abs(p.x - p.px) + Math.abs(p.y - p.py);
       e += Math.abs(B.x - B.px) + Math.abs(B.y - B.py);
       rest = e < .03 && Math.abs(yaw) < .05 ? rest + 1 : 0;
