@@ -64,7 +64,49 @@
 </div>
 
 <section class="hero page" id="home">
-  <div class="profile" id="profile" title="Klik aku"><span>Y</span><img src="profil.jpeg" alt="Foto profil Yungz" onerror="this.remove()"></div>
+  <!-- ID card tergantung (fisika tali + kartu) -->
+  <div class="badge-stage" id="badgeStage">
+    <svg class="strap" width="1" height="1" aria-hidden="true">
+      <defs>
+        <linearGradient id="strapG" gradientUnits="userSpaceOnUse" x1="0" y1="-56" x2="0" y2="130">
+          <stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#00e0ff"/>
+        </linearGradient>
+      </defs>
+      <path class="s-edge" d=""/>
+      <path class="s-body" d=""/>
+      <path class="s-stripe" d=""/>
+    </svg>
+
+    <div class="badge" id="badge" role="button" tabindex="0" aria-label="ID card Yungz. Tarik untuk mengayun, tekan Enter untuk membalik kartu">
+      <div class="yaw" id="badgeYaw">
+        <div class="flip" id="badgeFlip">
+          <div class="face front">
+            <span class="slot"></span>
+            <div class="b-label">CREATOR PASS</div>
+            <div class="b-photo"><span>Y</span><img src="profil.jpeg" alt="Foto profil Yungz" draggable="false" onerror="this.remove()"></div>
+            <div class="b-name grad">YUNGZ</div>
+            <div class="b-role">Web Developer</div>
+            <div class="b-info">
+              <div><small>ID</small><b>YZ-0001</b></div>
+              <div><small>STATUS</small><b><i class="dot"></i>Aktif</b></div>
+            </div>
+            <div class="b-code"></div>
+            <span class="sheen"></span><span class="glare"></span>
+          </div>
+          <div class="face back">
+            <span class="slot"></span>
+            <div class="b-stripe"></div>
+            <div class="b-back-txt"><b class="grad">itsmeyungz.my.id</b><span>@itsmeyungz_</span><span>yungzpotabuga@gmail.com</span></div>
+            <div class="b-sign"><em>Yungz</em></div>
+            <div class="b-foot">Ketuk 2× untuk balik</div>
+            <span class="sheen"></span><span class="glare"></span>
+          </div>
+        </div>
+      </div>
+      <div class="clip" aria-hidden="true"></div>
+    </div>
+  </div>
+  <p class="badge-hint" id="badgeHint">Tarik, ketuk, atau ketuk 2× untuk membalik kartu</p>
   <div class="hi">Halo, saya</div>
   <h1 class="grad">Yungz</h1>
   <div class="role"><span id="typed"></span><span class="caret"></span></div>
