@@ -152,6 +152,7 @@ section.page:not(.hero){min-height:70svh}
 .b-info small{font-size:8.5px;letter-spacing:.2em;color:var(--muted)}
 .b-info b{font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px}
 .dot{width:7px;height:7px;border-radius:50%;background:#35e08a;box-shadow:0 0 8px #35e08a}
+.b-code.sm{height:16px;margin-top:2px;flex:none}
 .b-wd{white-space:nowrap;font-size:19px;font-weight:700;letter-spacing:.01em;line-height:1.2;text-align:center}
 .b-code{width:100%;height:76px;opacity:.9;
   background:repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 4px,#fff 4px 5px,transparent 5px 8px,#fff 8px 11px,transparent 11px 12px,#fff 12px 13px,transparent 13px 16px)}
