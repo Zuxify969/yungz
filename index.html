@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Yungz — Portofolio</title>
-<meta name="description" content="Portofolio Yungz — developer & kreator digital.">
+<title>Portofolio Yungz</title>
+<meta name="description" content="Portofolio Yungz. Web developer dan UI designer.">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <meta name="theme-color" content="#0a0a12">
-<meta property="og:title" content="Yungz — Portofolio">
-<meta property="og:description" content="Portofolio Yungz — developer & kreator digital.">
+<meta property="og:title" content="Portofolio Yungz">
+<meta property="og:description" content="Portofolio Yungz. Web developer dan UI designer.">
 <meta property="og:image" content="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body class="loading">
 
@@ -48,7 +48,7 @@
 <div class="blob b1"></div><div class="blob b2"></div>
 
 <nav>
-  <a href="#home" class="logo" aria-label="Yungz — Beranda"><img src="logo.png" alt="Yungz" width="46" height="46" decoding="async" onerror="this.replaceWith('Y')"></a>
+  <a href="#home" class="logo" aria-label="Yungz, beranda"><img src="logo.png" alt="Yungz" width="46" height="46" decoding="async" onerror="this.replaceWith('Y')"></a>
   <a href="#about">Tentang</a>
   <a href="#skills">Skill</a>
   <a href="#projects">Proyek</a>
@@ -64,22 +64,44 @@
 </div>
 
 <section class="hero page" id="home">
-  <!-- ID card tergantung: dirender oleh React (badge.js) -->
-  <div id="badgeRoot" style="display:contents"></div>
-  <div class="hi">Halo, saya</div>
+  <!-- ID card tergantung (hanya sisi depan) -->
+  <div class="badge-stage" id="badgeStage">
+    <svg class="strap" width="1" height="1" aria-hidden="true">
+      <defs>
+        <linearGradient id="strapG" gradientUnits="userSpaceOnUse" x1="0" y1="-56" x2="0" y2="130">
+          <stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#00e0ff"/>
+        </linearGradient>
+      </defs>
+      <path class="s-edge" d=""/>
+      <path class="s-body" d=""/>
+      <path class="s-stripe" d=""/>
+    </svg>
+    <div class="badge" id="badge" aria-label="ID card Yungz. Tarik untuk mengayun">
+      <div class="face">
+        <span class="slot"></span>
+        <div class="b-photo"><span>Y</span><img src="profil.jpeg" alt="Foto profil Yungz" draggable="false" onerror="this.remove()"></div>
+        <div class="b-name grad">YUNGZ</div>
+        <div class="b-code"></div>
+        <span class="glare"></span>
+      </div>
+      <div class="clip" aria-hidden="true"></div>
+    </div>
+  </div>
+  <p class="badge-hint" id="badgeHint">Tarik atau ketuk kartunya</p>
+  <div class="hi">Halo, aku</div>
   <h1 class="grad">Yungz</h1>
   <div class="role"><span id="typed"></span><span class="caret"></span></div>
   <div class="cta">
     <a href="#projects" class="btn primary">Lihat Karya <svg class="i"><use href="#i-arrow"/></svg></a>
-    <a href="#contact" class="btn ghost">Hubungi Saya</a>
+    <a href="#contact" class="btn ghost">Hubungi Aku</a>
   </div>
 </section>
 
 <section id="about" class="about page">
   <span class="tag reveal">Tentang</span>
-  <h2 class="reveal">Sedikit <span class="grad">tentang saya</span></h2>
-  <p class="reveal">Saya <b>Yungz</b>, kreator digital yang suka mengubah ide menjadi sesuatu yang <b>nyata, cepat, dan enak dilihat</b>.</p>
-  <p class="reveal">Saya senang membangun website, bereksperimen dengan desain, dan terus belajar hal baru setiap hari. Ganti teks ini dengan cerita kamu sendiri.</p>
+  <h2 class="reveal">Tentang <span class="grad">aku</span></h2>
+  <p class="reveal">Aku <b>Yungz</b>. Kerjaan sehari-hariku bikin website dan ngoprek tampilan supaya nyaman dipakai.</p>
+  <p class="reveal">Aku belajar paling cepat dengan langsung coba, jadi banyak yang aku bikin berawal dari iseng. Kalau ada yang menarik, biasanya aku bongkar dulu cara kerjanya.</p>
 </section>
 
 <section id="skills" class="page">
@@ -99,33 +121,33 @@
 <section id="projects" class="page">
   <span class="tag reveal">Karya</span>
   <h2 class="reveal">Proyek <span class="grad">pilihan</span></h2>
-  <p class="sub reveal">Klik kartu untuk melihat detail.</p>
+  <p class="sub reveal">Ketuk kartunya buat lihat detail.</p>
   <div class="grid">
-    <article class="card reveal" data-ico="cart" data-title="Toko Online" data-desc="Website toko online dengan keranjang belanja dan filter produk. Ganti deskripsi ini dengan proyek aslimu.">
-      <div class="ico"><svg class="i"><use href="#i-cart"/></svg></div><h3>Toko Online</h3><p>E-commerce responsif dengan keranjang belanja.</p>
+    <article class="card reveal" data-ico="cart" data-title="Toko Online" data-desc="Website toko online dengan keranjang belanja dan filter produk.">
+      <div class="ico"><svg class="i"><use href="#i-cart"/></svg></div><h3>Toko Online</h3><p>Toko online dengan keranjang dan filter produk.</p>
     </article>
-    <article class="card reveal" data-ico="palette" data-title="Brand Identity" data-desc="Desain logo, palet warna, dan panduan visual lengkap untuk sebuah brand baru.">
-      <div class="ico"><svg class="i"><use href="#i-palette"/></svg></div><h3>Brand Identity</h3><p>Logo, warna, dan tipografi yang konsisten.</p>
+    <article class="card reveal" data-ico="palette" data-title="Brand Identity" data-desc="Logo, palet warna, dan panduan visual untuk sebuah brand baru.">
+      <div class="ico"><svg class="i"><use href="#i-palette"/></svg></div><h3>Brand Identity</h3><p>Logo, warna, dan huruf untuk brand baru.</p>
     </article>
-    <article class="card reveal" data-ico="note" data-title="Catatan Harian" data-desc="Aplikasi catatan sederhana dengan mode gelap dan penyimpanan lokal.">
-      <div class="ico"><svg class="i"><use href="#i-note"/></svg></div><h3>Catatan Harian</h3><p>Aplikasi notes ringan dengan dark mode.</p>
+    <article class="card reveal" data-ico="note" data-title="Catatan Harian" data-desc="Aplikasi catatan sederhana dengan mode gelap. Catatannya tersimpan di perangkat.">
+      <div class="ico"><svg class="i"><use href="#i-note"/></svg></div><h3>Catatan Harian</h3><p>Catatan sederhana dengan mode gelap.</p>
     </article>
-    <article class="card reveal" data-ico="rocket" data-title="Landing Page Event" data-desc="Landing page dengan countdown, animasi scroll, dan form pendaftaran.">
-      <div class="ico"><svg class="i"><use href="#i-rocket"/></svg></div><h3>Landing Page Event</h3><p>Halaman promosi dengan animasi scroll.</p>
+    <article class="card reveal" data-ico="rocket" data-title="Landing Page Event" data-desc="Landing page untuk acara: ada hitung mundur, animasi saat scroll, dan form pendaftaran.">
+      <div class="ico"><svg class="i"><use href="#i-rocket"/></svg></div><h3>Landing Page Event</h3><p>Halaman acara dengan hitung mundur.</p>
     </article>
-    <article class="card reveal" data-ico="phone" data-title="UI Kit Mobile" data-desc="Kumpulan komponen UI untuk aplikasi mobile: tombol, kartu, navigasi, dan form.">
-      <div class="ico"><svg class="i"><use href="#i-phone"/></svg></div><h3>UI Kit Mobile</h3><p>Komponen siap pakai untuk app mobile.</p>
+    <article class="card reveal" data-ico="phone" data-title="UI Kit Mobile" data-desc="Kumpulan komponen untuk aplikasi mobile: tombol, kartu, navigasi, dan form.">
+      <div class="ico"><svg class="i"><use href="#i-phone"/></svg></div><h3>UI Kit Mobile</h3><p>Komponen untuk aplikasi mobile.</p>
     </article>
-    <article class="card reveal" data-ico="game" data-title="Game Tebak Angka" data-desc="Mini game interaktif dengan skor dan level.">
-      <div class="ico"><svg class="i"><use href="#i-game"/></svg></div><h3>Game Tebak Angka</h3><p>Mini game interaktif yang seru.</p>
+    <article class="card reveal" data-ico="game" data-title="Game Tebak Angka" data-desc="Game kecil tebak angka, ada skor dan level.">
+      <div class="ico"><svg class="i"><use href="#i-game"/></svg></div><h3>Game Tebak Angka</h3><p>Game kecil tebak angka.</p>
     </article>
   </div>
 </section>
 
 <section id="contact" class="page">
   <div class="contact reveal">
-    <h2>Ayo <span class="grad">berkolaborasi</span></h2>
-    <p>Punya ide atau proyek? Klik tombol di bawah untuk menyalin email saya.</p>
+    <h2>Ngobrol <span class="grad">yuk</span></h2>
+    <p>Ada ide atau kerjaan? Salin emailku di bawah, atau chat lewat WhatsApp.</p>
     <button class="btn primary" id="copyMail" data-mail="yungzpotabuga@gmail.com"><svg class="i"><use href="#i-copy"/></svg> yungzpotabuga@gmail.com</button>
     <div class="socials">
       <a class="social" href="https://wa.me/6285141593665" target="_blank" rel="noopener"><svg class="i"><use href="#i-chat"/></svg> 0851-4159-3665</a>
@@ -147,14 +169,11 @@
     <div class="ico" id="mIco"></div>
     <h3 id="mTitle"></h3>
     <p id="mDesc"></p>
-    <a href="#contact" class="btn primary" id="mBtn">Hubungi saya <svg class="i"><use href="#i-arrow"/></svg></a>
+    <a href="#contact" class="btn primary" id="mBtn">Hubungi aku <svg class="i"><use href="#i-arrow"/></svg></a>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js" defer></script>
-<script src="badge.js?v=3" defer></script>
-<script src="script.js?v=3" defer></script>
+<script src="script.js?v=4" defer></script>
 </body>
 </html>

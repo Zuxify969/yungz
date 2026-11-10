@@ -46,7 +46,112 @@
   addEventListener('hashchange', showPage);
   showPage();
 
-  // ID card tergantung: lihat badge.js (React)
+  // ID card tergantung (fisika tali, ringan, tanpa library). Berhenti otomatis saat diam.
+  (() => {
+    const stage = $('#badgeStage'); if (!stage) return;
+    const badge = $('#badge'), hint = $('#badgeHint'), paths = $$('.strap path', stage);
+    const W = 184, H = 268, HOLE = 20, N = 7, AY = -56, LR = 170, SEG = LR / N, L = H / 2 - HOLE, G = .9;
+    const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const mk = (x, y, w) => ({ x, y, px: x, py: y, w });
+    const pts = Array.from({ length: N + 1 }, (_, i) => mk(0, AY + i * SEG, i ? 1 : 0));
+    const A = pts[N], B = mk(0, A.y + L, .45);
+    let drag = null, running = false, last = 0, acc = 0, rest = 0, minX = -1e4, maxX = 1e4;
+    badge.style.transformOrigin = '0 0';
+
+    const link = (a, b, len) => {
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1e-4, ws = a.w + b.w;
+      if (!ws) return;
+      const f = (d - len) / d;
+      a.x += dx * f * a.w / ws; a.y += dy * f * a.w / ws; b.x -= dx * f * b.w / ws; b.y -= dy * f * b.w / ws;
+    };
+    function step() {
+      for (let i = 1; i <= N; i++) {
+        const p = pts[i], vx = (p.x - p.px) * .994, vy = (p.y - p.py) * .994;
+        p.px = p.x; p.py = p.y; p.x += vx; p.y += vy + G;
+      }
+      if (drag) {
+        let tx = drag.tx, ty = drag.ty;
+        const dx = tx, dy = ty - AY, d = Math.hypot(dx, dy), reach = (LR + L) * .92;
+        if (d > reach) { tx = dx / d * reach; ty = AY + dy / d * reach; }
+        B.px = B.x; B.py = B.y; B.x += (tx - B.x) * .55; B.y += (ty - B.y) * .55;
+      } else {
+        let vx = (B.x - B.px) * .99, vy = (B.y - B.py) * .99;
+        const sp = Math.hypot(vx, vy); if (sp > 40) { vx *= 40 / sp; vy *= 40 / sp; }
+        B.px = B.x; B.py = B.y; B.x += vx; B.y += vy + G;
+      }
+      for (let k = 0; k < 12; k++) { for (let i = 0; i < N; i++) link(pts[i], pts[i + 1], SEG); link(A, B, L); }
+      for (const p of [A, B]) { if (p.x < minX) { p.x = minX; p.px = p.x; } else if (p.x > maxX) { p.x = maxX; p.px = p.x; } }
+      // kunci panjang: tali & kartu selalu tersambung, tidak bisa melar / putus
+      for (let i = 1; i <= N; i++) {
+        const a = pts[i - 1], p = pts[i], dx = p.x - a.x, dy = p.y - a.y, d = Math.hypot(dx, dy) || 1e-4;
+        p.x = a.x + dx / d * SEG; p.y = a.y + dy / d * SEG;
+      }
+      { const dx = B.x - A.x, dy = B.y - A.y, d = Math.hypot(dx, dy) || 1e-4; B.x = A.x + dx / d * L; B.y = A.y + dy / d * L; }
+      let e = Math.abs(B.x - B.px) + Math.abs(B.y - B.py);
+      for (const p of pts) e += Math.abs(p.x - p.px) + Math.abs(p.y - p.py);
+      rest = e < .03 ? rest + 1 : 0;
+    }
+    const f1 = n => n.toFixed(1);
+    function render() {
+      const th = Math.atan2(-(B.x - A.x), B.y - A.y), c = Math.cos(th), s = Math.sin(th);
+      const ex = A.x - c * W / 2 + s * HOLE, ey = A.y - s * W / 2 - c * HOLE;   // pivot = lubang kartu
+      badge.style.transform = `matrix(${c.toFixed(5)},${s.toFixed(5)},${(-s).toFixed(5)},${c.toFixed(5)},${ex.toFixed(2)},${ey.toFixed(2)})`;
+      let d = `M${f1(pts[0].x)} ${f1(pts[0].y)}`;
+      for (let i = 1; i < N; i++) { const p = pts[i], q = pts[i + 1]; d += `Q${f1(p.x)} ${f1(p.y)} ${f1((p.x + q.x) / 2)} ${f1((p.y + q.y) / 2)}`; }
+      d += `L${f1(A.x)} ${f1(A.y)}`;
+      for (const p of paths) p.setAttribute('d', d);
+    }
+    function loop(t) {
+      if (!stage.offsetWidth || document.hidden) { running = false; return; }
+      const r = stage.getBoundingClientRect(), c = r.left + r.width / 2;
+      minX = -c + W / 2 + 4; maxX = innerWidth - c - W / 2 - 4;
+      acc += Math.max(0, Math.min(t - last, 50)); last = t;
+      while (acc >= 16.667) { step(); acc -= 16.667; }
+      render();
+      if (rest > 60 && !drag) { running = false; return; }
+      requestAnimationFrame(loop);
+    }
+    const wake = () => { if (running) return; running = true; last = performance.now(); acc = 0; rest = 0; requestAnimationFrame(loop); };
+    const nudge = v => { B.px = B.x - v; A.px = A.x - v * .4; wake(); };
+    const toWorld = e => { const r = stage.getBoundingClientRect(); return { x: e.clientX - r.left - r.width / 2, y: e.clientY - r.top }; };
+    const glare = e => {
+      const r = badge.getBoundingClientRect();
+      badge.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 100).toFixed(0) + '%');
+      badge.style.setProperty('--gy', ((e.clientY - r.top) / r.height * 100).toFixed(0) + '%');
+    };
+
+    badge.addEventListener('pointerdown', e => {
+      if (e.button > 0) return;
+      badge.setPointerCapture(e.pointerId);
+      const p = toWorld(e);
+      drag = { ox: B.x - p.x, oy: B.y - p.y, tx: B.x, ty: B.y, sx: e.clientX, sy: e.clientY, t: performance.now(), moved: false };
+      B.w = 0; badge.classList.add('grab', 'lit'); glare(e); hint.classList.add('off'); wake();
+    });
+    badge.addEventListener('pointermove', e => {
+      if (e.pointerType === 'mouse' || drag) glare(e);
+      if (!drag) return;
+      const p = toWorld(e); drag.tx = p.x + drag.ox; drag.ty = p.y + drag.oy;
+      if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 8) drag.moved = true;
+    });
+    const release = e => {
+      if (!drag) return;
+      const d = drag; drag = null; B.w = .45; badge.classList.remove('grab', 'lit');
+      if (e.type === 'pointerup' && !d.moved && performance.now() - d.t < 350) {
+        const r = badge.getBoundingClientRect(), px = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+        nudge(-px * 9 || 6); navigator.vibrate && navigator.vibrate(10);
+      }
+      wake();
+    };
+    badge.addEventListener('pointerup', release);
+    badge.addEventListener('pointercancel', release);
+    badge.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') badge.classList.add('lit'); });
+    badge.addEventListener('pointerleave', () => { if (!drag) badge.classList.remove('lit'); });
+    badge.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
+    addEventListener('hashchange', () => { if ($('#home').classList.contains('active') && !reduce) nudge(5); });
+    render();
+    if (!reduce) setTimeout(() => nudge(7), 3300);
+  })();
 
   // Chips toggle
   $$('.chip').forEach(c => c.addEventListener('click', () => c.classList.toggle('on')));
