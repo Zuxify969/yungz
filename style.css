@@ -26,19 +26,20 @@ nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;heigh
 nav a:hover{color:#fff}
 nav a:hover::after,nav a.active::after{transform:scaleX(1)}
 nav a.active{color:#fff}
-nav .logo{margin-right:auto;padding:0;font-size:22px;font-weight:700;letter-spacing:-.02em}
+nav .logo{margin-right:auto;padding:0;display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;letter-spacing:-.02em}
 nav .logo::after{display:none}
-nav .logo:hover{color:transparent}
+nav .logo img{width:32px;height:32px;object-fit:contain;border-radius:8px;transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+nav .logo:hover img{transform:rotate(-8deg) scale(1.1)}
 
 /* hero */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:130px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding-top:130px}
 .hi{color:var(--a2);font-size:15px;margin-bottom:8px}
 h1{font-size:clamp(64px,16vw,170px);line-height:1;letter-spacing:-.04em;font-weight:700}
 .role{font-size:clamp(20px,3.4vw,32px);color:var(--muted);margin-top:16px;min-height:1.5em}
 .role b{color:#fff;font-weight:500}
 .caret{display:inline-block;width:3px;height:1em;background:var(--a2);margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:34px}
 .btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;border:none;cursor:pointer;font-family:inherit;font-size:16px;font-weight:500;
   padding:13px 26px;border-radius:12px;color:#fff;text-decoration:none;transition:transform .25s,box-shadow .25s}
 .btn.primary{background:var(--grad);box-shadow:0 10px 36px -12px var(--a1)}
@@ -102,6 +103,8 @@ h2{font-size:clamp(32px,5.5vw,52px);letter-spacing:-.03em;margin-bottom:14px}
 .social .i{font-size:20px}
 .social:hover{transform:translateY(-5px);background:var(--grad);border-color:transparent}
 footer{text-align:center;color:var(--muted);padding:30px 20px 50px;font-size:14px}
+.foot-logo{display:block;width:40px;height:40px;object-fit:contain;margin:0 auto 10px;opacity:.85;transition:opacity .3s,transform .35s cubic-bezier(.3,1.5,.5,1)}
+.foot-logo:hover{opacity:1;transform:scale(1.1) rotate(-6deg)}
 
 .toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,120px);background:#12121f;border:1px solid var(--a2);padding:11px 20px;border-radius:12px;z-index:300;transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
 .toast.show{transform:translate(-50%,0)}
@@ -115,15 +118,15 @@ section.page:not(.hero){min-height:70svh}
 @keyframes pageIn{from{opacity:0;transform:translateY(24px) scale(.985)}to{opacity:1;transform:none}}
 
 /* foto profil */
-.profile{position:relative;width:132px;height:132px;border-radius:50%;background:var(--grad);margin-bottom:22px;cursor:pointer;
+.profile{position:relative;width:168px;height:168px;border-radius:50%;background:var(--grad);margin:0 auto 24px;flex:none;cursor:pointer;
   box-shadow:0 14px 44px -14px var(--a1);transition:transform .35s cubic-bezier(.3,1.5,.5,1),box-shadow .35s;-webkit-tap-highlight-color:transparent}
 .profile:hover{transform:scale(1.06);box-shadow:0 18px 56px -12px var(--a2)}
 .profile>*{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);border-radius:50%;background:#12121f}
-.profile span{display:grid;place-items:center;font-size:52px;font-weight:700}
+.profile span{display:grid;place-items:center;font-size:64px;font-weight:700}
 .profile img{object-fit:cover}
 .profile.spin{animation:spin .8s cubic-bezier(.3,1.4,.5,1)}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:480px){.profile{width:112px;height:112px}}
+@media(max-width:480px){.profile{width:140px;height:140px}.profile span{font-size:54px}}
 
 /* bottom navbar (mobile & tablet) */
 .bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;justify-content:space-around;
@@ -141,10 +144,12 @@ section.page:not(.hero){min-height:70svh}
 /* responsive */
 @media(min-width:1400px){section{max-width:1240px}}
 @media(max-width:768px){
-  nav{display:none}
+  nav{height:56px;justify-content:center}
+  nav a:not(.logo){display:none}
+  nav .logo{margin:0}
   .bottom-nav{display:flex}
-  section{padding:70px 5vw}
-  .hero{min-height:100svh;padding-top:40px}
+  section{padding:84px 5vw 70px}
+  .hero{min-height:100svh;padding-top:76px}
   footer{padding-bottom:100px}
   .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
   .about p{font-size:16.5px}
