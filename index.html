@@ -1,1 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yungz — Portofolio</title>
+<meta name="description" content="Portofolio Yungz — developer & kreator digital.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07070d; --bg2:#0e0e1a; --card:rgba(255,255,255,.04); --line:rgba(255,255,255,.1);
+    --text:#eef0ff; --muted:#9a9db8;
+    --a1:#7c5cff; --a2:#00e0ff; --a3:#ff4ecd;
+    --grad:linear-gradient(120deg,var(--a1),var(--a2),var(--a3));
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--text);
+    overflow-x:hidden;line-height:1.6;
+  }
+  body.rainbow{animation:hue 4s linear infinite}
+  @keyframes hue{to{filter:hue-rotate(360deg)}}
+  #bg{position:fixed;inset:0;z-index:0}
+  main,header,footer{position:relative;z-index:2}
+  section{padding:110px 6vw;max-width:1200px;margin:0 auto}
+  .grad-text{background:var(--grad);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 6s linear infinite}
+  @keyframes flow{to{background-position:200% center}}
 
+  /* cursor */
+  .cursor,.cursor-dot{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
+  .cursor{width:38px;height:38px;border:2px solid var(--a2);transition:width .2s,height .2s,background .2s,border-color .2s;mix-blend-mode:screen}
+  .cursor.hover{width:64px;height:64px;background:rgba(124,92,255,.2);border-color:var(--a3)}
+  .cursor-dot{width:7px;height:7px;background:var(--a3)}
+  @media (hover:none){.cursor,.cursor-dot{display:none}}
+
+  /* nav */
+  nav{
+    position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:6px;align-items:center;
+    padding:8px 10px;border-radius:999px;background:rgba(14,14,26,.65);backdrop-filter:blur(14px);border:1px solid var(--line);
+  }
+  nav a{color:var(--muted);text-decoration:none;font-size:14px;padding:8px 14px;border-radius:999px;transition:.25s}
+  nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+  nav .logo{font-weight:700;color:#fff;cursor:pointer;user-select:none;padding:8px 14px}
+  #themeBtn{background:none;border:1px solid var(--line);color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;transition:.3s}
+  #themeBtn:hover{transform:rotate(180deg) scale(1.1);border-color:var(--a2)}
+  @media(max-width:640px){nav a:not(.logo){padding:8px 9px;font-size:12.5px}}
+
+  /* hero */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding-top:140px}
+  .hi{font-family:'JetBrains Mono',monospace;color:var(--a2);font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .hi .wave{display:inline-block;animation:wave 2s ease-in-out infinite;transform-origin:70% 70%}
+  @keyframes wave{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-8deg)}50%{transform:rotate(10deg)}}
+  .big-name{font-size:clamp(64px,17vw,190px);font-weight:700;line-height:1;letter-spacing:-.04em;display:flex;flex-wrap:wrap;user-select:none}
+  .big-name span{display:inline-block;cursor:pointer;transition:transform .3s cubic-bezier(.3,1.8,.5,1),filter .3s}
+  .big-name span:hover{transform:translateY(-14px) rotate(-6deg) scale(1.08);filter:drop-shadow(0 0 24px var(--a1))}
+  .big-name span.jump{animation:jump .8s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes jump{0%{transform:translateY(0)}30%{transform:translateY(-70px) rotate(20deg) scale(1.2)}60%{transform:translateY(8px) rotate(-8deg)}100%{transform:translateY(0)}}
+  .role{font-size:clamp(20px,3.4vw,34px);margin-top:18px;color:var(--muted);min-height:1.5em}
+  .role b{color:#fff;font-weight:500}
+  .caret{display:inline-block;width:3px;height:1em;background:var(--a2);margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:38px}
+  .btn{
+    position:relative;overflow:hidden;border:none;cursor:pointer;font-family:inherit;font-size:16px;font-weight:500;
+    padding:14px 28px;border-radius:14px;color:#fff;text-decoration:none;transition:transform .25s,box-shadow .25s;
+  }
+  .btn.primary{background:var(--grad);background-size:200% auto;animation:flow 5s linear infinite;box-shadow:0 10px 40px -10px var(--a1)}
+  .btn.ghost{background:var(--card);border:1px solid var(--line)}
+  .btn:hover{transform:translateY(-4px) scale(1.03)}
+  .btn:active{transform:scale(.95)}
+  .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .7s ease-out forwards;pointer-events:none}
+  @keyframes rip{to{transform:scale(4);opacity:0}}
+  .scroll-hint{position:absolute;bottom:30px;left:6vw;color:var(--muted);font-size:13px;display:flex;align-items:center;gap:10px}
+  .mouse{width:22px;height:34px;border:2px solid var(--muted);border-radius:12px;position:relative}
+  .mouse::after{content:"";position:absolute;left:50%;top:6px;width:3px;height:7px;background:var(--a2);border-radius:3px;transform:translateX(-50%);animation:wheel 1.6s infinite}
+  @keyframes wheel{0%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,12px)}}
+
+  /* headings */
+  .sec-title{font-size:clamp(34px,6vw,58px);font-weight:700;letter-spacing:-.03em;margin-bottom:14px}
+  .sec-sub{color:var(--muted);max-width:560px;margin-bottom:50px}
+  .tag{font-family:'JetBrains Mono',monospace;color:var(--a3);font-size:13px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;display:block}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(50px) scale(.97);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* about */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  @media(max-width:820px){.about-grid{grid-template-columns:1fr}}
+  .avatar-wrap{display:flex;justify-content:center}
+  .avatar{
+    width:min(320px,80vw);aspect-ratio:1;position:relative;cursor:pointer;
+    border-radius:38% 62% 63% 37% / 41% 44% 56% 59%;background:var(--grad);background-size:200% auto;
+    animation:morph 9s ease-in-out infinite,flow 6s linear infinite;display:grid;place-items:center;
+    box-shadow:0 30px 80px -20px var(--a1);transition:transform .4s;
+  }
+  .avatar:hover{transform:scale(1.06) rotate(4deg)}
+  .avatar span{font-size:110px;font-weight:700;color:#fff;text-shadow:0 8px 30px rgba(0,0,0,.35);user-select:none}
+  .avatar.spin{animation:morph 9s ease-in-out infinite,spin360 1s cubic-bezier(.5,0,.2,1)}
+  @keyframes spin360{to{transform:rotate(360deg) scale(1)}}
+  @keyframes morph{
+    0%,100%{border-radius:38% 62% 63% 37% / 41% 44% 56% 59%}
+    33%{border-radius:60% 40% 35% 65% / 55% 60% 40% 45%}
+    66%{border-radius:45% 55% 60% 40% / 35% 40% 60% 65%}
+  }
+  .about p{color:var(--muted);margin-bottom:18px;font-size:18px}
+  .about p b{color:#fff;font-weight:500}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;text-align:center;transition:.3s;cursor:pointer}
+  .stat:hover{transform:translateY(-6px);border-color:var(--a2);background:rgba(0,224,255,.06)}
+  .stat strong{font-size:34px;display:block}
+  .stat small{color:var(--muted)}
+
+  /* skills */
+  .chips{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:46px}
+  .chip{
+    background:var(--card);border:1px solid var(--line);color:var(--text);padding:12px 20px;border-radius:999px;
+    font-family:inherit;font-size:16px;cursor:pointer;transition:.3s cubic-bezier(.3,1.8,.5,1);user-select:none;
+  }
+  .chip:hover{transform:translateY(-5px) rotate(-3deg);border-color:var(--a1)}
+  .chip.pop{animation:pop .55s cubic-bezier(.3,1.8,.5,1);background:var(--grad);border-color:transparent}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.35) rotate(-6deg)}100%{transform:scale(1)}}
+  .bars{display:grid;gap:22px;max-width:760px}
+  .bar-top{display:flex;justify-content:space-between;font-size:15px;margin-bottom:8px}
+  .bar{height:10px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;cursor:pointer}
+  .bar i{display:block;height:100%;width:0;border-radius:99px;background:var(--grad);background-size:200% auto;animation:flow 4s linear infinite;transition:width 1.6s cubic-bezier(.2,.8,.2,1);position:relative}
+  .bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);animation:shine 2.4s infinite}
+  @keyframes shine{to{transform:translateX(100%)}}
+
+  /* projects */
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
+  .filter{background:none;border:1px solid var(--line);color:var(--muted);padding:9px 20px;border-radius:999px;cursor:pointer;font-family:inherit;font-size:15px;transition:.25s}
+  .filter:hover{color:#fff;border-color:var(--a2)}
+  .filter.active{background:var(--grad);color:#fff;border-color:transparent}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:24px}
+  .card{
+    position:relative;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px;cursor:pointer;
+    transform-style:preserve-3d;transition:transform .15s ease-out,opacity .4s,border-color .3s;overflow:hidden;min-height:250px;display:flex;flex-direction:column;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(124,92,255,.28),transparent 45%);
+    opacity:0;transition:opacity .3s;pointer-events:none;
+  }
+  .card:hover::before{opacity:1}
+  .card:hover{border-color:var(--a1)}
+  .card.hide{display:none}
+  .card .ico{font-size:44px;margin-bottom:14px;transition:transform .5s cubic-bezier(.3,1.8,.5,1)}
+  .card:hover .ico{transform:scale(1.3) rotate(-10deg)}
+  .card h3{font-size:22px;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:15px;flex:1}
+  .card .tags{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .card .tags em{font-style:normal;font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.07);color:var(--a2)}
+
+  /* modal */
+  .modal{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;background:rgba(3,3,8,.7);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .35s}
+  .modal.open{opacity:1;pointer-events:auto}
+  .modal-box{
+    width:min(520px,100%);background:var(--bg2);border:1px solid var(--line);border-radius:28px;padding:36px;position:relative;
+    transform:scale(.7) rotate(-4deg);transition:transform .5s cubic-bezier(.3,1.6,.5,1);
+  }
+  .modal.open .modal-box{transform:none}
+  .modal-box .big{font-size:64px;margin-bottom:10px}
+  .modal-box h3{font-size:30px;margin-bottom:10px}
+  .modal-box p{color:var(--muted);margin-bottom:20px}
+  .x{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:none;color:#fff;font-size:18px;cursor:pointer;transition:.3s}
+  .x:hover{transform:rotate(90deg);background:var(--a3)}
+
+  /* contact */
+  .contact-box{
+    text-align:center;background:var(--card);border:1px solid var(--line);border-radius:36px;padding:70px 24px;position:relative;overflow:hidden;
+  }
+  .contact-box::before{content:"";position:absolute;width:480px;height:480px;border-radius:50%;background:var(--grad);filter:blur(120px);opacity:.18;left:50%;top:-240px;transform:translateX(-50%);animation:float 7s ease-in-out infinite}
+  @keyframes float{50%{transform:translateX(-50%) translateY(40px)}}
+  .contact-box>*{position:relative}
+  .contact-box h2{font-size:clamp(34px,6vw,64px);letter-spacing:-.03em;margin-bottom:14px}
+  .contact-box p{color:var(--muted);margin-bottom:30px}
+  .socials{display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+  .social{
+    width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font-size:24px;background:var(--card);border:1px solid var(--line);
+    text-decoration:none;color:#fff;transition:.35s cubic-bezier(.3,1.8,.5,1);
+  }
+  .social:hover{transform:translateY(-10px) rotate(8deg) scale(1.12);background:var(--grad);border-color:transparent}
+  footer{text-align:center;color:var(--muted);padding:40px 20px 60px;font-size:14px}
+
+  /* toast */
+  .toast{position:fixed;bottom:30px;left:50%;transform:translate(-50%,120px);background:var(--bg2);border:1px solid var(--a2);padding:12px 22px;border-radius:14px;z-index:300;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+  .toast.show{transform:translate(-50%,0)}
+
+  /* progress */
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--grad);z-index:100}
+
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<canvas id="bg"></canvas>
+<div class="cursor"></div><div class="cursor-dot"></div>
+
+<nav>
+  <span class="logo grad-text" id="logo">Yungz</span>
+  <a href="#about">Tentang</a>
+  <a href="#skills">Skill</a>
+  <a href="#projects">Proyek</a>
+  <a href="#contact">Kontak</a>
+  <button id="themeBtn" title="Ganti warna">🎨</button>
+</nav>
+
+<header>
+  <section class="hero" id="home">
+    <div class="hi"><span class="wave">👋</span> Halo, saya</div>
+    <h1 class="big-name grad-text" id="bigName" aria-label="Yungz"></h1>
+    <div class="role"><span id="typed"></span><span class="caret"></span></div>
+    <div class="cta">
+      <a href="#projects" class="btn primary">Lihat Karya ✨</a>
+      <a href="#contact" class="btn ghost">Hubungi Saya</a>
+      <button class="btn ghost" id="boom">💥 Klik aku!</button>
+    </div>
+    <div class="scroll-hint"><div class="mouse"></div> scroll ke bawah</div>
+  </section>
+</header>
+
+<main>
+  <section id="about" class="about">
+    <span class="tag reveal">// tentang</span>
+    <h2 class="sec-title reveal">Sedikit <span class="grad-text">tentang saya</span></h2>
+    <div class="about-grid">
+      <div class="reveal">
+        <p>Saya <b>Yungz</b>, kreator digital yang suka mengubah ide menjadi sesuatu yang <b>nyata, cepat, dan enak dilihat</b>.</p>
+        <p>Saya senang membangun website, bereksperimen dengan desain, dan terus belajar hal baru setiap hari. Ganti teks ini dengan cerita kamu sendiri ya!</p>
+        <div class="stats">
+          <div class="stat"><strong data-count="12">0</strong><small>Proyek</small></div>
+          <div class="stat"><strong data-count="3">0</strong><small>Tahun belajar</small></div>
+          <div class="stat"><strong data-count="99">0</strong><small>Ide gila</small></div>
+        </div>
+      </div>
+      <div class="avatar-wrap reveal">
+        <div class="avatar" id="avatar" title="Klik aku!"><span>Y</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <span class="tag reveal">// kemampuan</span>
+    <h2 class="sec-title reveal">Skill & <span class="grad-text">tools</span></h2>
+    <p class="sec-sub reveal">Klik chip-nya, ada kejutan kecil 😉</p>
+    <div class="chips reveal">
+      <button class="chip">HTML</button><button class="chip">CSS</button><button class="chip">JavaScript</button>
+      <button class="chip">React</button><button class="chip">Node.js</button><button class="chip">Figma</button>
+      <button class="chip">Git</button><button class="chip">UI/UX</button>
+    </div>
+    <div class="bars">
+      <div class="reveal"><div class="bar-top"><span>Frontend</span><span>90%</span></div><div class="bar" data-w="90"><i></i></div></div>
+      <div class="reveal"><div class="bar-top"><span>Desain UI</span><span>80%</span></div><div class="bar" data-w="80"><i></i></div></div>
+      <div class="reveal"><div class="bar-top"><span>Backend</span><span>65%</span></div><div class="bar" data-w="65"><i></i></div></div>
+      <div class="reveal"><div class="bar-top"><span>Kreativitas</span><span>100%</span></div><div class="bar" data-w="100"><i></i></div></div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <span class="tag reveal">// karya</span>
+    <h2 class="sec-title reveal">Proyek <span class="grad-text">pilihan</span></h2>
+    <p class="sec-sub reveal">Arahkan kursor ke kartu, lalu klik untuk detail.</p>
+    <div class="filters reveal">
+      <button class="filter active" data-f="all">Semua</button>
+      <button class="filter" data-f="web">Web</button>
+      <button class="filter" data-f="design">Desain</button>
+      <button class="filter" data-f="app">Aplikasi</button>
+    </div>
+    <div class="grid" id="grid">
+      <article class="card reveal" data-cat="web" data-title="Toko Online Keren" data-ico="🛒" data-desc="Website toko online dengan keranjang belanja, filter produk, dan animasi halus. Ganti deskripsi ini dengan proyek aslimu.">
+        <div class="ico">🛒</div><h3>Toko Online Keren</h3><p>E-commerce responsif dengan keranjang dan pembayaran.</p><div class="tags"><em>HTML</em><em>JS</em><em>CSS</em></div>
+      </article>
+      <article class="card reveal" data-cat="design" data-title="Brand Identity" data-ico="🎨" data-desc="Desain logo, palet warna, dan panduan visual lengkap untuk sebuah brand baru.">
+        <div class="ico">🎨</div><h3>Brand Identity</h3><p>Logo, warna, dan tipografi yang konsisten.</p><div class="tags"><em>Figma</em><em>Branding</em></div>
+      </article>
+      <article class="card reveal" data-cat="app" data-title="Catatan Harian" data-ico="📝" data-desc="Aplikasi catatan sederhana dengan mode gelap, penyimpanan lokal, dan pencarian cepat.">
+        <div class="ico">📝</div><h3>Catatan Harian</h3><p>Aplikasi notes ringan dengan dark mode.</p><div class="tags"><em>React</em><em>LocalStorage</em></div>
+      </article>
+      <article class="card reveal" data-cat="web" data-title="Landing Page Event" data-ico="🚀" data-desc="Landing page dengan countdown, animasi scroll, dan form pendaftaran untuk sebuah acara.">
+        <div class="ico">🚀</div><h3>Landing Page Event</h3><p>Halaman promosi penuh animasi scroll.</p><div class="tags"><em>HTML</em><em>GSAP</em></div>
+      </article>
+      <article class="card reveal" data-cat="design" data-title="UI Kit Mobile" data-ico="📱" data-desc="Kumpulan komponen UI untuk aplikasi mobile: tombol, kartu, navigasi, dan form.">
+        <div class="ico">📱</div><h3>UI Kit Mobile</h3><p>Komponen siap pakai untuk app mobile.</p><div class="tags"><em>Figma</em><em>UI/UX</em></div>
+      </article>
+      <article class="card reveal" data-cat="app" data-title="Game Tebak Angka" data-ico="🎮" data-desc="Mini game interaktif dengan skor, level, dan efek suara. Seru untuk dimainkan bareng teman.">
+        <div class="ico">🎮</div><h3>Game Tebak Angka</h3><p>Mini game interaktif penuh efek.</p><div class="tags"><em>JS</em><em>Canvas</em></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact-box reveal">
+      <h2>Ayo <span class="grad-text">berkolaborasi!</span></h2>
+      <p>Punya ide atau proyek? Klik tombol di bawah untuk menyalin email saya.</p>
+      <button class="btn primary" id="copyMail" data-mail="halo@itsmeyungz.my.id">📋 halo@itsmeyungz.my.id</button>
+      <div class="socials">
+        <a class="social" href="#" title="Instagram">📸</a>
+        <a class="social" href="#" title="GitHub">💻</a>
+        <a class="social" href="#" title="TikTok">🎵</a>
+        <a class="social" href="#" title="WhatsApp">💬</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© <span id="yr"></span> Yungz · itsmeyungz.my.id · Coba klik logo "Yungz" 5x 🌈</footer>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="x" id="closeModal">✕</button>
+    <div class="big" id="mIco"></div>
+    <h3 id="mTitle"></h3>
+    <p id="mDesc"></p>
+    <a href="#contact" class="btn primary" id="mBtn">Tertarik? Hubungi saya</a>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const toast = (msg) => { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2200); };
+  $('#yr').textContent = new Date().getFullYear();
+
+  /* ---------- Big name letters ---------- */
+  const nameEl = $('#bigName');
+  'Yungz'.split('').forEach(ch => {
+    const s = document.createElement('span'); s.textContent = ch;
+    s.addEventListener('click', e => { s.classList.remove('jump'); void s.offsetWidth; s.classList.add('jump'); burst(e.clientX, e.clientY, 26); });
+    nameEl.appendChild(s);
+  });
+
+  /* ---------- Typewriter ---------- */
+  const roles = ['Web Developer', 'UI Designer', 'Kreator Digital', 'Pemecah Masalah'];
+  let ri = 0, ci = 0, del = false;
+  (function type() {
+    const word = roles[ri], el = $('#typed');
+    el.innerHTML = '<b>' + word.slice(0, ci) + '</b>';
+    if (!del && ci < word.length) { ci++; setTimeout(type, 90); }
+    else if (!del) { del = true; setTimeout(type, 1400); }
+    else if (ci > 0) { ci--; setTimeout(type, 45); }
+    else { del = false; ri = (ri + 1) % roles.length; setTimeout(type, 300); }
+  })();
+
+  /* ---------- Particle background ---------- */
+  const cv = $('#bg'), ctx = cv.getContext('2d');
+  let W, H, DPR = Math.min(devicePixelRatio || 1, 2);
+  const mouse = { x: -999, y: -999 };
+  let parts = [], sparks = [];
+  const COLORS = ['#7c5cff', '#00e0ff', '#ff4ecd', '#ffd84e'];
+  function resize() {
+    W = innerWidth; H = innerHeight;
+    cv.width = W * DPR; cv.height = H * DPR; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const n = Math.min(110, Math.floor(W * H / 14000));
+    parts = Array.from({ length: n }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - .5) * .5, vy: (Math.random() - .5) * .5, r: Math.random() * 2 + 1
+    }));
+  }
+  addEventListener('resize', resize); resize();
+
+  function burst(x, y, n = 30) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, sp = Math.random() * 7 + 2;
+      sparks.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, r: Math.random() * 4 + 2, c: COLORS[(Math.random() * COLORS.length) | 0] });
+    }
+  }
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of parts) {
+      const dx = p.x - mouse.x, dy = p.y - mouse.y, d = Math.hypot(dx, dy);
+      if (d < 140) { p.x += dx / d * 2.2; p.y += dy / d * 2.2; }
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fillStyle = 'rgba(160,170,255,.8)'; ctx.fill();
+    }
+    for (let i = 0; i < parts.length; i++) for (let j = i + 1; j < parts.length; j++) {
+      const a = parts[i], b = parts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (d < 120) { ctx.strokeStyle = `rgba(124,92,255,${(1 - d / 120) * .35})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+    }
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i], d = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+      if (d < 170) { ctx.strokeStyle = `rgba(0,224,255,${(1 - d / 170) * .6})`; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke(); }
+    }
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i]; s.x += s.vx; s.y += s.vy; s.vy += .12; s.vx *= .985; s.life -= .018;
+      if (s.life <= 0) { sparks.splice(i, 1); continue; }
+      ctx.globalAlpha = s.life; ctx.fillStyle = s.c; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * s.life, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+
+  /* ---------- Cursor ---------- */
+  const cur = $('.cursor'), dot = $('.cursor-dot');
+  let cx = 0, cy = 0;
+  addEventListener('mousemove', e => {
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+  });
+  (function follow() { cx += (mouse.x - cx) * .18; cy += (mouse.y - cy) * .18; cur.style.left = cx + 'px'; cur.style.top = cy + 'px'; requestAnimationFrame(follow); })();
+  $$('a,button,.card,.chip,.stat,.avatar,.bar,.big-name span').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+  });
+  addEventListener('touchmove', e => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; }, { passive: true });
+
+  /* ---------- Click burst everywhere ---------- */
+  addEventListener('click', e => burst(e.clientX, e.clientY, 18));
+
+  /* ---------- Button ripple ---------- */
+  $$('.btn').forEach(b => b.addEventListener('click', e => {
+    const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height), el = document.createElement('span');
+    el.className = 'ripple'; el.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+    b.appendChild(el); setTimeout(() => el.remove(), 700);
+  }));
+
+  /* ---------- Boom button ---------- */
+  $('#boom').addEventListener('click', e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    for (let i = 0; i < 6; i++) setTimeout(() => burst(Math.random() * W, Math.random() * H * .8, 40), i * 120);
+    burst(r.left + r.width / 2, r.top + r.height / 2, 80);
+    toast('💥 Boom! Keren kan?');
+  });
+
+  /* ---------- Scroll reveal, progress, counters, bars ---------- */
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return;
+    en.target.classList.add('in'); io.unobserve(en.target);
+    $$('[data-count]', en.target).forEach(counter);
+    const bar = $('.bar', en.target); if (bar) setTimeout(() => $('i', bar).style.width = bar.dataset.w + '%', 200);
+  }), { threshold: .15 });
+  $$('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 90 + 'ms'; io.observe(el); });
+  function counter(el) {
+    const to = +el.dataset.count; let n = 0; const step = Math.max(1, Math.ceil(to / 50));
+    const t = setInterval(() => { n += step; if (n >= to) { n = to; clearInterval(t); } el.textContent = n + (to > 50 ? '%' : '+'); }, 30);
+  }
+  addEventListener('scroll', () => {
+    const h = document.documentElement; $('#progress').style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  }, { passive: true });
+
+  /* ---------- Avatar / stats / chips / bars clicks ---------- */
+  $('#avatar').addEventListener('click', e => { const a = e.currentTarget; a.classList.remove('spin'); void a.offsetWidth; a.classList.add('spin'); burst(e.clientX, e.clientY, 50); toast('Wuss! 🌀'); });
+  $$('.stat').forEach(s => s.addEventListener('click', e => { burst(e.clientX, e.clientY, 25); const c = $('strong', s); c.textContent = '0'; counter(c); }));
+  $$('.chip').forEach(c => c.addEventListener('click', e => {
+    c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); burst(e.clientX, e.clientY, 32);
+    toast(c.textContent + ' ✔ dikuasai!');
+  }));
+  $$('.bar').forEach(b => b.addEventListener('click', () => {
+    const i = $('i', b); i.style.width = '0'; setTimeout(() => i.style.width = b.dataset.w + '%', 80);
+  }));
+
+  /* ---------- Project filter ---------- */
+  $$('.filter').forEach(f => f.addEventListener('click', () => {
+    $$('.filter').forEach(x => x.classList.remove('active')); f.classList.add('active');
+    $$('.card').forEach(c => {
+      const show = f.dataset.f === 'all' || c.dataset.cat === f.dataset.f;
+      if (show) { c.classList.remove('hide'); c.animate([{ opacity: 0, transform: 'scale(.8)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 450, easing: 'cubic-bezier(.3,1.6,.5,1)' }); }
+      else c.classList.add('hide');
+    });
+  }));
+
+  /* ---------- 3D tilt + spotlight ---------- */
+  $$('.card').forEach(c => {
+    c.addEventListener('mousemove', e => {
+      const r = c.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      c.style.setProperty('--mx', x + 'px'); c.style.setProperty('--my', y + 'px');
+      c.style.transform = `perspective(800px) rotateY(${(x / r.width - .5) * 14}deg) rotateX(${(.5 - y / r.height) * 14}deg) translateY(-6px)`;
+    });
+    c.addEventListener('mouseleave', () => c.style.transform = '');
+    c.addEventListener('click', () => {
+      $('#mIco').textContent = c.dataset.ico; $('#mTitle').textContent = c.dataset.title; $('#mDesc').textContent = c.dataset.desc;
+      $('#modal').classList.add('open');
+    });
+  });
+  const closeM = () => $('#modal').classList.remove('open');
+  $('#closeModal').addEventListener('click', closeM);
+  $('#mBtn').addEventListener('click', closeM);
+  $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeM(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') closeM(); });
+
+  /* ---------- Copy email ---------- */
+  $('#copyMail').addEventListener('click', e => {
+    const m = e.currentTarget.dataset.mail;
+    (navigator.clipboard ? navigator.clipboard.writeText(m) : Promise.reject()).then(() => toast('Email disalin! 📋'), () => toast(m));
+    for (let i = 0; i < 3; i++) setTimeout(() => burst(e.clientX, e.clientY, 40), i * 100);
+  });
+
+  /* ---------- Theme button & easter egg ---------- */
+  const themes = [['#7c5cff', '#00e0ff', '#ff4ecd'], ['#ff7a18', '#ffd84e', '#ff4e50'], ['#00c9a7', '#00e0ff', '#7c5cff'], ['#ff4ecd', '#ff7a18', '#ffd84e']];
+  let ti = 0;
+  $('#themeBtn').addEventListener('click', () => {
+    ti = (ti + 1) % themes.length; const t = themes[ti], r = document.documentElement.style;
+    r.setProperty('--a1', t[0]); r.setProperty('--a2', t[1]); r.setProperty('--a3', t[2]);
+    COLORS.splice(0, 3, ...t); toast('Tema diganti 🎨');
+  });
+  let logoClicks = 0;
+  $('#logo').addEventListener('click', () => {
+    if (++logoClicks >= 5) { logoClicks = 0; document.body.classList.toggle('rainbow'); toast('🌈 Mode pelangi!'); }
+  });
+
+  /* ---------- Ripple-friendly smooth anchor (safari) ---------- */
+  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const t = $(a.getAttribute('href')); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  }));
+})();
+</script>
+</body>
+</html>
