@@ -9,7 +9,7 @@
   const hideLoader = () => setTimeout(() => {
     loader.classList.add('hide'); document.body.classList.remove('loading');
     setTimeout(() => loader.remove(), 600);
-  }, Math.max(0, 1100 - (performance.now() - t0)));
+  }, Math.max(0, 3000 - (performance.now() - t0)));
   document.readyState === 'complete' ? hideLoader() : addEventListener('load', hideLoader, { once: true });
 
   // Typewriter
