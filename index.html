@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Yungz — Portofolio</title>
 <meta name="description" content="Portofolio Yungz — developer & kreator digital.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,7 @@
   nav a{color:var(--muted);text-decoration:none;font-size:14px;padding:7px 13px;border-radius:999px;transition:.25s}
   nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
   nav .logo{font-weight:700;color:#fff}
-  @media(max-width:560px){nav a{padding:7px 9px;font-size:13px}}
+  nav a.active{color:#fff;background:rgba(255,255,255,.1)}
 
   /* hero */
   .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:130px}
@@ -111,6 +111,42 @@
 
   .toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,120px);background:#12121f;border:1px solid var(--a2);padding:11px 20px;border-radius:12px;z-index:300;transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
   .toast.show{transform:translate(-50%,0)}
+  .box{max-height:88vh;overflow:auto}
+
+  /* bottom navbar (mobile & tablet) */
+  .bottom-nav{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;
+    justify-content:space-around;gap:2px;padding:7px;border-radius:22px;background:rgba(14,14,26,.85);
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);box-shadow:0 12px 40px -10px rgba(0,0,0,.7)}
+  .bottom-nav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:16px;
+    color:var(--muted);text-decoration:none;font-size:11px;font-weight:500;transition:color .25s,background .25s,transform .2s;-webkit-tap-highlight-color:transparent}
+  .bottom-nav a .i{font-size:22px;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+  .bottom-nav a.active{color:#fff;background:rgba(124,92,255,.24)}
+  .bottom-nav a.active .i{color:var(--a2);transform:translateY(-2px) scale(1.12)}
+  .bottom-nav a:active{transform:scale(.93)}
+
+  /* responsive */
+  @media(min-width:1400px){section{max-width:1240px}}
+  @media(max-width:768px){
+    nav{display:none}
+    .bottom-nav{display:flex}
+    section{padding:70px 5vw}
+    .hero{min-height:100svh;padding-top:40px}
+    footer{padding-bottom:120px}
+    .toast{bottom:calc(98px + env(safe-area-inset-bottom))}
+    .about p{font-size:16.5px}
+  }
+  @media(max-width:480px){
+    .grid{grid-template-columns:1fr}
+    .cta .btn{flex:1 1 100%;justify-content:center}
+    #copyMail{width:100%;justify-content:center;font-size:14px;padding:13px 14px}
+    .socials{flex-direction:column}
+    .social{justify-content:center}
+    .contact{padding:40px 18px;border-radius:24px}
+    .box{padding:26px}
+    .blob{width:300px;height:300px}
+    .bottom-nav{left:8px;right:8px}
+    .bottom-nav a{font-size:10.5px}
+  }
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -131,6 +167,11 @@
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></symbol>
 </svg>
 
 <div class="blob b1"></div><div class="blob b2"></div>
@@ -142,6 +183,14 @@
   <a href="#projects">Proyek</a>
   <a href="#contact">Kontak</a>
 </nav>
+
+<div class="bottom-nav" role="navigation" aria-label="Navigasi bawah">
+  <a href="#home" class="active"><svg class="i"><use href="#i-home"/></svg><span>Beranda</span></a>
+  <a href="#about"><svg class="i"><use href="#i-user"/></svg><span>Tentang</span></a>
+  <a href="#skills"><svg class="i"><use href="#i-code"/></svg><span>Skill</span></a>
+  <a href="#projects"><svg class="i"><use href="#i-grid"/></svg><span>Proyek</span></a>
+  <a href="#contact"><svg class="i"><use href="#i-mail"/></svg><span>Kontak</span></a>
+</div>
 
 <section class="hero" id="home">
   <div class="hi">Halo, saya</div>
@@ -253,6 +302,15 @@
     const b = $('.bar', e.target); if (b) setTimeout(() => $('i', b).style.width = b.dataset.w + '%', 200);
   }), { threshold: .15 });
   $$('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 80 + 'ms'; io.observe(el); });
+
+  // Navbar aktif sesuai section
+  const navLinks = $$('nav a:not(.logo), .bottom-nav a');
+  const setActive = id => navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }), { rootMargin: '-45% 0px -50% 0px' });
+  ['home', 'about', 'skills', 'projects', 'contact'].forEach(id => { const s = document.getElementById(id); if (s) spy.observe(s); });
+  addEventListener('scroll', () => {
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 6) setActive('contact');
+  }, { passive: true });
 
   // Chips toggle
   $$('.chip').forEach(c => c.addEventListener('click', () => c.classList.toggle('on')));
