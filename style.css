@@ -26,9 +26,9 @@ nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;heigh
 nav a:hover{color:#fff}
 nav a:hover::after,nav a.active::after{transform:scaleX(1)}
 nav a.active{color:#fff}
-nav .logo{margin-right:auto;padding:0;display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;letter-spacing:-.02em}
+nav .logo{margin-right:auto;padding:0;display:flex;align-items:center;color:#fff;font-size:30px;font-weight:700}
 nav .logo::after{display:none}
-nav .logo img{width:32px;height:32px;object-fit:contain;border-radius:8px;transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+nav .logo img{width:46px;height:46px;object-fit:contain;border-radius:10px;transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
 nav .logo:hover img{transform:rotate(-8deg) scale(1.1)}
 
 /* hero */
@@ -144,12 +144,12 @@ section.page:not(.hero){min-height:70svh}
 /* responsive */
 @media(min-width:1400px){section{max-width:1240px}}
 @media(max-width:768px){
-  nav{height:56px;justify-content:center}
+  nav{height:60px;justify-content:flex-start}
   nav a:not(.logo){display:none}
-  nav .logo{margin:0}
+  nav .logo img{width:40px;height:40px}
   .bottom-nav{display:flex}
-  section{padding:84px 5vw 70px}
-  .hero{min-height:100svh;padding-top:76px}
+  section{padding:88px 5vw 70px}
+  .hero{min-height:100svh;padding-top:80px}
   footer{padding-bottom:100px}
   .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
   .about p{font-size:16.5px}
@@ -166,3 +166,15 @@ section.page:not(.hero){min-height:70svh}
   .bottom-nav a{font-size:10.5px}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* loading screen */
+body.loading{overflow:hidden}
+.loader{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:var(--bg);
+  transition:opacity .5s ease,visibility .5s ease;animation:loaderOut .5s ease 4s forwards}
+.loader.hide{opacity:0;visibility:hidden}
+.loader-logo{width:96px;height:96px;object-fit:contain;border-radius:22px;font-size:72px;font-weight:700;line-height:96px;text-align:center;animation:loaderPulse 1.2s ease-in-out infinite}
+.loader-bar{width:140px;height:4px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+.loader-bar i{display:block;height:100%;width:0;border-radius:99px;background:var(--grad);animation:loaderFill 1.1s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes loaderPulse{50%{transform:scale(1.1);filter:drop-shadow(0 0 22px var(--a1))}}
+@keyframes loaderFill{to{width:100%}}
+@keyframes loaderOut{to{opacity:0;visibility:hidden}}

@@ -4,6 +4,14 @@
   const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2000); };
   $('#yr').textContent = new Date().getFullYear();
 
+  // Loading screen
+  const loader = $('#loader'), t0 = performance.now();
+  const hideLoader = () => setTimeout(() => {
+    loader.classList.add('hide'); document.body.classList.remove('loading');
+    setTimeout(() => loader.remove(), 600);
+  }, Math.max(0, 1100 - (performance.now() - t0)));
+  document.readyState === 'complete' ? hideLoader() : addEventListener('load', hideLoader, { once: true });
+
   // Typewriter
   const roles = ['Web Developer', 'UI Designer', 'Kreator Digital'];
   let ri = 0, ci = 0, del = false;
