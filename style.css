@@ -19,12 +19,16 @@ section{max-width:1100px;margin:0 auto;padding:100px 6vw}
 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* nav */
-nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:4px;
-  padding:7px 10px;border-radius:999px;background:rgba(14,14,26,.7);backdrop-filter:blur(14px);border:1px solid var(--line)}
-nav a{color:var(--muted);text-decoration:none;font-size:14px;padding:7px 13px;border-radius:999px;transition:.25s}
-nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
-nav .logo{font-weight:700;color:#fff}
-nav a.active{color:#fff;background:rgba(255,255,255,.1)}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;align-items:center;gap:4px;padding:0 6vw;
+  background:rgba(10,10,18,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav a{position:relative;color:var(--muted);text-decoration:none;font-size:14px;padding:22px 14px;transition:color .25s}
+nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:2px;background:var(--grad);transform:scaleX(0);transition:transform .3s}
+nav a:hover{color:#fff}
+nav a:hover::after,nav a.active::after{transform:scaleX(1)}
+nav a.active{color:#fff}
+nav .logo{margin-right:auto;padding:0;font-size:22px;font-weight:700;letter-spacing:-.02em}
+nav .logo::after{display:none}
+nav .logo:hover{color:transparent}
 
 /* hero */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:130px}
@@ -122,15 +126,17 @@ section.page:not(.hero){min-height:70svh}
 @media(max-width:480px){.profile{width:112px;height:112px}}
 
 /* bottom navbar (mobile & tablet) */
-.bottom-nav{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;
-  justify-content:space-around;gap:2px;padding:7px;border-radius:22px;background:rgba(14,14,26,.85);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);box-shadow:0 12px 40px -10px rgba(0,0,0,.7)}
-.bottom-nav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:16px;
-  color:var(--muted);text-decoration:none;font-size:11px;font-weight:500;transition:color .25s,background .25s,transform .2s;-webkit-tap-highlight-color:transparent}
+.bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;justify-content:space-around;
+  padding:0 4px env(safe-area-inset-bottom);background:rgba(10,10,18,.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+.bottom-nav a{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 9px;
+  color:var(--muted);text-decoration:none;font-size:11px;font-weight:500;transition:color .25s,transform .2s;-webkit-tap-highlight-color:transparent}
+.bottom-nav a::before{content:"";position:absolute;top:-1px;left:25%;right:25%;height:2px;background:var(--grad);transform:scaleX(0);transition:transform .3s}
 .bottom-nav a .i{font-size:22px;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
-.bottom-nav a.active{color:#fff;background:rgba(124,92,255,.24)}
-.bottom-nav a.active .i{color:var(--a2);transform:translateY(-2px) scale(1.12)}
-.bottom-nav a:active{transform:scale(.93)}
+.bottom-nav a.active{color:#fff}
+.bottom-nav a.active::before{transform:scaleX(1)}
+.bottom-nav a.active .i{color:var(--a2);transform:translateY(-2px) scale(1.1)}
+.bottom-nav a:active{transform:scale(.94)}
 
 /* responsive */
 @media(min-width:1400px){section{max-width:1240px}}
@@ -139,8 +145,8 @@ section.page:not(.hero){min-height:70svh}
   .bottom-nav{display:flex}
   section{padding:70px 5vw}
   .hero{min-height:100svh;padding-top:40px}
-  footer{padding-bottom:120px}
-  .toast{bottom:calc(98px + env(safe-area-inset-bottom))}
+  footer{padding-bottom:100px}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
   .about p{font-size:16.5px}
 }
 @media(max-width:480px){
@@ -152,7 +158,6 @@ section.page:not(.hero){min-height:70svh}
   .contact{padding:40px 18px;border-radius:24px}
   .box{padding:26px}
   .blob{width:300px;height:300px}
-  .bottom-nav{left:8px;right:8px}
   .bottom-nav a{font-size:10.5px}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
