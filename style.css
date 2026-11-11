@@ -179,13 +179,11 @@ section.page:not(.hero){min-height:70svh}
 /* responsive */
 @media(min-width:1400px){section{max-width:1240px}}
 @media(max-width:768px){
-  nav{height:60px;justify-content:flex-start}
-  nav a:not(.logo){display:none}
-  nav .logo img{width:40px;height:40px}
+  nav{display:none}
   .bottom-nav{display:flex}
-  section{padding:88px 5vw 70px}
-  .hero{min-height:100svh;padding-top:80px}
-  .badge-stage{margin-top:-40px}
+  section{padding:36px 5vw 70px}
+  .hero{min-height:100svh;padding-top:28px}
+  .badge-stage{margin-top:0}
   footer{padding-bottom:120px}
   .toast{bottom:calc(98px + env(safe-area-inset-bottom))}
   .about p{font-size:16.5px}

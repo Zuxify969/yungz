@@ -122,7 +122,7 @@
       const th = Math.atan2(-(B.x - A.x), B.y - A.y), c = Math.cos(th), s = Math.sin(th);
       const ex = A.x - c * W / 2 + s * HOLE, ey = A.y - s * W / 2 - c * HOLE;   // pivot = lubang kartu
       badge.style.transform = `matrix(${c.toFixed(5)},${s.toFixed(5)},${(-s).toFixed(5)},${c.toFixed(5)},${ex.toFixed(2)},${ey.toFixed(2)})`;
-      let d = `M${f1(pts[0].x)} ${f1(pts[0].y)}`;
+      let d = `M0 -3000L${f1(pts[0].x)} ${f1(pts[0].y)}`;   // tali menerus ke atas layar, ujungnya tidak pernah kelihatan
       for (let i = 1; i < N; i++) { const p = pts[i], q = pts[i + 1]; d += `Q${f1(p.x)} ${f1(p.y)} ${f1((p.x + q.x) / 2)} ${f1((p.y + q.y) / 2)}`; }
       d += `L${f1(A.x)} ${f1(A.y)}`;
       for (const p of paths) p.setAttribute('d', d);
