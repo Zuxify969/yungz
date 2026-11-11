@@ -4,13 +4,39 @@
   const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2000); };
   $('#yr').textContent = new Date().getFullYear();
 
-  // Loading screen
-  const loader = $('#loader'), t0 = performance.now();
-  const hideLoader = () => setTimeout(() => {
-    loader.classList.add('hide'); document.body.classList.remove('loading');
-    setTimeout(() => loader.remove(), 600);
-  }, Math.max(0, 3000 - (performance.now() - t0)));
-  document.readyState === 'complete' ? hideLoader() : addEventListener('load', hideLoader, { once: true });
+  // Loading screen: 5 detik, hanya sekali per sesi (sessionStorage)
+  const loader = $('#loader'), root = document.documentElement;
+  if (!root.classList.contains('fresh')) {
+    document.body.classList.remove('loading'); loader.remove();
+  } else {
+    const DUR = 5000, CIRC = 339.3, t0 = performance.now();
+    const arc = $('#lArc'), pct = $('#lPct'), st = $('#lStatus');
+    const msgs = ['Menyiapkan tampilan', 'Memuat aset', 'Merapikan detail', 'Hampir selesai'];
+    let loaded = document.readyState === 'complete', ended = false;
+    if (!loaded) addEventListener('load', () => { loaded = true; }, { once: true });
+    const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const end = () => {
+      if (ended) return; ended = true;
+      arc.style.strokeDashoffset = 0; pct.textContent = '100%'; st.textContent = 'Selesai';
+      try { sessionStorage.setItem('yz_seen', '1'); } catch (e) {}
+      setTimeout(() => {
+        loader.classList.add('hide'); document.body.classList.remove('loading');
+        setTimeout(() => document.dispatchEvent(new Event('yz:reveal')), 350);   // kartu mulai jatuh
+        setTimeout(() => { loader.remove(); root.classList.remove('fresh'); }, 1500);
+      }, 250);
+    };
+    (function frame(now) {
+      if (ended) return;
+      const t = Math.min((now - t0) / DUR, 1);
+      let p = ease(t); if (!loaded) p = Math.min(p, .96);
+      arc.style.strokeDashoffset = (CIRC * (1 - p)).toFixed(1);
+      pct.textContent = Math.round(p * 100) + '%';
+      st.textContent = msgs[Math.min(3, Math.floor(p * 4))];
+      if (t >= 1 && loaded) return end();
+      requestAnimationFrame(frame);
+    })(t0);
+    setTimeout(end, 12000);   // pengaman kalau halaman sangat lambat
+  }
 
   // Typewriter
   const roles = ['Web Developer', 'UI Designer', 'Kreator Digital'];
@@ -150,7 +176,28 @@
     document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
     addEventListener('hashchange', () => { if ($('#home').classList.contains('active') && !reduce) nudge(5); });
     render();
-    if (!reduce) setTimeout(() => nudge(7), 3300);
+    // ID card jatuh dari atas (sekali per sesi, setelah loading selesai), lalu mengayun
+    const root2 = document.documentElement;
+    function dropIn() {
+      if (!root2.classList.contains('fresh')) return;
+      if (reduce) { root2.classList.remove('fresh'); return; }
+      const G2 = 2600, K = 2400, C = 34;
+      let y = -820, v = 0, phase = 0, prev = performance.now();
+      stage.style.transform = `translateY(${y}px)`; stage.classList.add('dropping');
+      root2.classList.remove('fresh');
+      (function tick(now) {
+        const dt = Math.min((now - prev) / 1000, .033); prev = now;
+        if (phase === 0) { v += G2 * dt; y += v * dt; if (y >= 0) phase = 1; }       // jatuh bebas
+        else { v += (-K * y - C * v) * dt; y += v * dt; }                          // tali menahan, memantul
+        if (phase === 1 && Math.abs(y) < .4 && Math.abs(v) < 8) {
+          stage.style.transform = ''; stage.classList.remove('dropping'); nudge(9); return;
+        }
+        stage.style.transform = `translateY(${y.toFixed(1)}px)`;
+        requestAnimationFrame(tick);
+      })(prev);
+    }
+    document.addEventListener('yz:reveal', dropIn, { once: true });
+    if (!root2.classList.contains('fresh') && !reduce) setTimeout(() => nudge(4), 500);
   })();
 
   // Chips toggle
