@@ -229,6 +229,6 @@ body.loading{overflow:hidden}
 @keyframes loaderOut{to{opacity:0;visibility:hidden}}
 
 /* ID card jatuh: kartu disembunyikan di atas layar sampai loading selesai */
-.fresh .badge-stage{transform:translateY(-820px)}
+.fresh .badge-stage{visibility:hidden}
 .fresh .badge-hint{opacity:0}
 .badge-stage.dropping .badge{pointer-events:none}

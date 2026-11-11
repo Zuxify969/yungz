@@ -72,26 +72,47 @@
   addEventListener('hashchange', showPage);
   showPage();
 
-  // ID card tergantung (fisika tali, ringan, tanpa library). Berhenti otomatis saat diam.
+  // ID card tergantung: tali & kartu dengan fisika (verlet). Tali bisa kendur, melipat, lalu menegang.
+  // Saat sesi baru: tali + kartu dilempar dari atas layar, jatuh, tertahan, lalu mengayun.
   (() => {
     const stage = $('#badgeStage'); if (!stage) return;
     const badge = $('#badge'), hint = $('#badgeHint'), paths = $$('.strap path', stage);
-    const W = 184, H = 268, HOLE = 20, N = 7, AY = -56, LR = 170, SEG = LR / N, L = H / 2 - HOLE, G = .9;
+    const root2 = document.documentElement;
+    const W = 184, H = 268, HOLE = 20, L = H / 2 - HOLE, REST_Y = 114;   // titik gantung kartu saat diam
     const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
     const mk = (x, y, w) => ({ x, y, px: x, py: y, w });
-    const pts = Array.from({ length: N + 1 }, (_, i) => mk(0, AY + i * SEG, i ? 1 : 0));
-    const A = pts[N], B = mk(0, A.y + L, .45);
-    let drag = null, running = false, last = 0, acc = 0, rest = 0, minX = -1e4, maxX = 1e4;
+    let pts = [], A, B, N = 7, AY = -56, LR = 170, SEG = 24, G = .9, layoutTop = -1;
+    let drag = null, running = false, last = 0, acc = 0, rest = 0, minX = -1e4, maxX = 1e4, free = false, soft = 0, dropping = false;
     badge.style.transformOrigin = '0 0';
+    const absTop = el => { let t = 0; for (; el; el = el.offsetParent) t += el.offsetTop; return t; };
 
-    const link = (a, b, len) => {
+    // tali selalu berasal dari atas layar (ujung atasnya tidak pernah kelihatan), apa pun tinggi layarnya
+    function layout(top) {
+      layoutTop = top;
+      AY = Math.min(-56, -top - 40);
+      LR = REST_Y - AY; N = Math.max(7, Math.round(LR / 24)); SEG = LR / N; G = .9 * (LR + L) / 284;
+      pts = Array.from({ length: N + 1 }, (_, i) => mk(0, AY + i * SEG, i ? 1 : 0));
+      A = pts[N]; B = mk(0, A.y + L, .45); free = false; soft = 0;
+    }
+    const visible = () => stage.offsetWidth > 0;
+    layout(visible() ? absTop(stage) : 28);
+
+    // tali: hanya menarik saat meregang (boleh kendur & melipat). Batang kartu: panjang tetap.
+    const link = (a, b, len, k) => {
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+      if (d <= len) return;
+      const ws = a.w + b.w; if (!ws) return;
+      const f = (d - len) / d * k;
+      a.x += dx * f * a.w / ws; a.y += dy * f * a.w / ws; b.x -= dx * f * b.w / ws; b.y -= dy * f * b.w / ws;
+    };
+    const rod = (a, b, len) => {
       const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1e-4, ws = a.w + b.w;
       if (!ws) return;
       const f = (d - len) / d;
       a.x += dx * f * a.w / ws; a.y += dy * f * a.w / ws; b.x -= dx * f * b.w / ws; b.y -= dy * f * b.w / ws;
     };
     function step() {
-      for (let i = 1; i <= N; i++) {
+      for (let i = free ? 0 : 1; i <= N; i++) {
         const p = pts[i], vx = (p.x - p.px) * .994, vy = (p.y - p.py) * .994;
         p.px = p.x; p.py = p.y; p.x += vx; p.y += vy + G;
       }
@@ -102,42 +123,53 @@
         B.px = B.x; B.py = B.y; B.x += (tx - B.x) * .55; B.y += (ty - B.y) * .55;
       } else {
         let vx = (B.x - B.px) * .99, vy = (B.y - B.py) * .99;
-        const sp = Math.hypot(vx, vy); if (sp > 40) { vx *= 40 / sp; vy *= 40 / sp; }
+        const sp = Math.hypot(vx, vy); if (sp > 60) { vx *= 60 / sp; vy *= 60 / sp; }
         B.px = B.x; B.py = B.y; B.x += vx; B.y += vy + G;
       }
-      for (let k = 0; k < 12; k++) { for (let i = 0; i < N; i++) link(pts[i], pts[i + 1], SEG); link(A, B, L); }
+      const kk = soft > 0 ? .55 : 1;                 // sesaat setelah tertahan: tali sedikit elastis
+      for (let it = 0; it < 14; it++) { for (let i = 0; i < N; i++) link(pts[i], pts[i + 1], SEG, kk); rod(A, B, L); }
       for (const p of [A, B]) { if (p.x < minX) { p.x = minX; p.px = p.x; } else if (p.x > maxX) { p.x = maxX; p.px = p.x; } }
-      // kunci panjang: tali & kartu selalu tersambung, tidak bisa melar / putus
-      for (let i = 1; i <= N; i++) {
-        const a = pts[i - 1], p = pts[i], dx = p.x - a.x, dy = p.y - a.y, d = Math.hypot(dx, dy) || 1e-4;
-        p.x = a.x + dx / d * SEG; p.y = a.y + dy / d * SEG;
+      if (free && pts[0].y >= AY) {                  // ujung atas tali tertangkap di gantungan
+        const p0 = pts[0]; p0.x = 0; p0.y = AY; p0.px = 0; p0.py = AY; p0.w = 0; free = false; soft = 100;
+      }
+      if (!free && soft <= 0) {                      // kunci panjang: tali tidak bisa melar / putus
+        for (let i = 1; i <= N; i++) {
+          const a = pts[i - 1], p = pts[i], dx = p.x - a.x, dy = p.y - a.y, d = Math.hypot(dx, dy);
+          if (d > SEG) { p.x = a.x + dx / d * SEG; p.y = a.y + dy / d * SEG; }
+        }
       }
       { const dx = B.x - A.x, dy = B.y - A.y, d = Math.hypot(dx, dy) || 1e-4; B.x = A.x + dx / d * L; B.y = A.y + dy / d * L; }
       let e = Math.abs(B.x - B.px) + Math.abs(B.y - B.py);
       for (const p of pts) e += Math.abs(p.x - p.px) + Math.abs(p.y - p.py);
       rest = e < .03 ? rest + 1 : 0;
+      if (soft > 0) soft--;
+      if (dropping && !free && soft <= 0) { dropping = false; stage.classList.remove('dropping'); }
     }
     const f1 = n => n.toFixed(1);
     function render() {
       const th = Math.atan2(-(B.x - A.x), B.y - A.y), c = Math.cos(th), s = Math.sin(th);
       const ex = A.x - c * W / 2 + s * HOLE, ey = A.y - s * W / 2 - c * HOLE;   // pivot = lubang kartu
       badge.style.transform = `matrix(${c.toFixed(5)},${s.toFixed(5)},${(-s).toFixed(5)},${c.toFixed(5)},${ex.toFixed(2)},${ey.toFixed(2)})`;
-      let d = `M0 -3000L${f1(pts[0].x)} ${f1(pts[0].y)}`;   // tali menerus ke atas layar, ujungnya tidak pernah kelihatan
+      let d = `M${f1(pts[0].x)} ${f1(pts[0].y)}`;
       for (let i = 1; i < N; i++) { const p = pts[i], q = pts[i + 1]; d += `Q${f1(p.x)} ${f1(p.y)} ${f1((p.x + q.x) / 2)} ${f1((p.y + q.y) / 2)}`; }
       d += `L${f1(A.x)} ${f1(A.y)}`;
       for (const p of paths) p.setAttribute('d', d);
     }
     function loop(t) {
-      if (!stage.offsetWidth || document.hidden) { running = false; return; }
+      if (!visible() || document.hidden) { running = false; return; }
       const r = stage.getBoundingClientRect(), c = r.left + r.width / 2;
       minX = -c + W / 2 + 4; maxX = innerWidth - c - W / 2 - 4;
       acc += Math.max(0, Math.min(t - last, 50)); last = t;
       while (acc >= 16.667) { step(); acc -= 16.667; }
       render();
-      if (rest > 60 && !drag) { running = false; return; }
+      if (rest > 60 && !drag && !free && !dropping) { running = false; return; }
       requestAnimationFrame(loop);
     }
-    const wake = () => { if (running) return; running = true; last = performance.now(); acc = 0; rest = 0; requestAnimationFrame(loop); };
+    function wake() {
+      if (running) return;
+      if (!drag && !free && !dropping && visible() && Math.abs(absTop(stage) - layoutTop) > 4) { layout(absTop(stage)); render(); }
+      running = true; last = performance.now(); acc = 0; rest = 0; requestAnimationFrame(loop);
+    }
     const nudge = v => { B.px = B.x - v; A.px = A.x - v * .4; wake(); };
     const toWorld = e => { const r = stage.getBoundingClientRect(); return { x: e.clientX - r.left - r.width / 2, y: e.clientY - r.top }; };
     const glare = e => {
@@ -147,7 +179,7 @@
     };
 
     badge.addEventListener('pointerdown', e => {
-      if (e.button > 0) return;
+      if (e.button > 0 || dropping) return;
       badge.setPointerCapture(e.pointerId);
       const p = toWorld(e);
       drag = { ox: B.x - p.x, oy: B.y - p.y, tx: B.x, ty: B.y, sx: e.clientX, sy: e.clientY, t: performance.now(), moved: false };
@@ -175,28 +207,29 @@
     badge.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
     addEventListener('hashchange', () => { if ($('#home').classList.contains('active') && !reduce) nudge(5); });
-    render();
-    // ID card jatuh dari atas (sekali per sesi, setelah loading selesai), lalu mengayun
-    const root2 = document.documentElement;
-    function dropIn() {
+    let rz = 0;
+    addEventListener('resize', () => {
+      clearTimeout(rz);
+      rz = setTimeout(() => { if (!drag && !free && !dropping && visible()) { layout(absTop(stage)); render(); } }, 200);
+    });
+
+    // dilempar dari atas: tali kusut jatuh bebas, ujungnya tertangkap gantungan, kartu tersentak lalu mengayun
+    function startDrop() {
       if (!root2.classList.contains('fresh')) return;
-      if (reduce) { root2.classList.remove('fresh'); return; }
-      const G2 = 2600, K = 2400, C = 34;
-      let y = -820, v = 0, phase = 0, prev = performance.now();
-      stage.style.transform = `translateY(${y}px)`; stage.classList.add('dropping');
-      root2.classList.remove('fresh');
-      (function tick(now) {
-        const dt = Math.min((now - prev) / 1000, .033); prev = now;
-        if (phase === 0) { v += G2 * dt; y += v * dt; if (y >= 0) phase = 1; }       // jatuh bebas
-        else { v += (-K * y - C * v) * dt; y += v * dt; }                          // tali menahan, memantul
-        if (phase === 1 && Math.abs(y) < .4 && Math.abs(v) < 8) {
-          stage.style.transform = ''; stage.classList.remove('dropping'); nudge(9); return;
-        }
-        stage.style.transform = `translateY(${y.toFixed(1)}px)`;
-        requestAnimationFrame(tick);
-      })(prev);
+      if (reduce || !visible()) { root2.classList.remove('fresh'); return; }
+      const top = absTop(stage); layout(top);
+      const y0 = -top - 300 - .35 * LR;                       // seluruhnya di atas layar
+      for (let i = 0; i <= N; i++) {
+        const p = pts[i], x = (i % 2) * .83 * SEG, y = y0 + i * .35 * SEG;
+        p.x = x; p.y = y; p.px = x + (i % 2 ? -.7 : .7); p.py = y; p.w = 1;
+      }
+      A = pts[N]; B.x = A.x + L * Math.sin(.5); B.y = A.y + L * Math.cos(.5); B.px = B.x; B.py = B.y;
+      free = true; dropping = true;
+      stage.classList.add('dropping'); root2.classList.remove('fresh');
+      render(); wake();
     }
-    document.addEventListener('yz:reveal', dropIn, { once: true });
+    document.addEventListener('yz:reveal', startDrop, { once: true });
+    render();
     if (!root2.classList.contains('fresh') && !reduce) setTimeout(() => nudge(4), 500);
   })();
 
